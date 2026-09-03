@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Standard Reserve — two auctions</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #0e0e0d;
+    color: #ececea;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .wrap { max-width: 520px; width: 100%; }
+  h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  p.sub {
+    font-size: 14px;
+    color: #9c9c98;
+    margin: 0 0 32px;
+    line-height: 1.6;
+  }
+  .field { margin-bottom: 28px; }
+  label { display: block; font-size: 13px; color: #b5b5b0; margin-bottom: 10px; }
+  input[type="range"] {
+    width: 100%;
+    accent-color: #d85a30;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .card {
+    background: #1a1a18;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .card p.label { font-size: 12px; color: #9c9c98; margin: 0 0 6px; }
+  .card p.value { font-size: 26px; font-weight: 500; margin: 0; }
+  .bars .row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .bars span.tag { font-size: 12px; width: 46px; color: #9c9c98; }
+  .track { flex: 1; height: 7px; background: #1a1a18; border-radius: 4px; overflow: hidden; }
+  .fill-fee { height: 100%; background: #e24b4a; border-radius: 4px; }
+  .fill-price { height: 100%; background: #639922; border-radius: 4px; }
+  footer { margin-top: 32px; font-size: 12px; color: #6e6e6a; }
+  footer a { color: #9c9c98; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Standard Reserve: two auctions</h1>
+  <p class="sub">A small model of how the exit-fee auction and the entry-license auction move relative to each other. They don't have to move together — try both sliders.</p>
+
+  <div class="field">
+    <label for="exitVol">Branches closing this week (% of network)</label>
+    <input type="range" min="0" max="100" value="20" step="1" id="exitVol">
+  </div>
+
+  <div class="field">
+    <label for="demand">New branch demand (% of daily auction slots claimed)</label>
+    <input type="range" min="0" max="100" value="60" step="1" id="demand">
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <p class="label">Exit fee</p>
+      <p class="value" id="feeOut">--</p>
+    </div>
+    <div class="card">
+      <p class="label">New license price</p>
+      <p class="value" id="priceOut">--</p>
+    </div>
+  </div>
+
+  <div class="bars">
+    <div class="row">
+      <span class="tag">exit</span>
+      <div class="track"><div class="fill-fee" id="feeBar" style="width:0%"></div></div>
+    </div>
+    <div class="row">
+      <span class="tag">entry</span>
+      <div class="track"><div class="fill-price" id="priceBar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <footer>Unofficial fan model, not affiliated with the Standard Reserve team.</footer>
+</div>
+
+<script>
+function update() {
+  var exitVol = parseInt(document.getElementById('exitVol').value);
+  var demand = parseInt(document.getElementById('demand').value);
+  var fee = Math.round(exitVol * 0.6);
+  var price = Math.round(demand * 0.9);
+  document.getElementById('feeOut').textContent = fee + '%';
+  document.getElementById('priceOut').textContent = price + '% of ceiling';
+  document.getElementById('feeBar').style.width = fee + '%';
+  document.getElementById('priceBar').style.width = price + '%';
+}
+document.getElementById('exitVol').addEventListener('input', update);
+document.getElementById('demand').addEventListener('input', update);
+update();
+</script>
+</body>
+</html>
